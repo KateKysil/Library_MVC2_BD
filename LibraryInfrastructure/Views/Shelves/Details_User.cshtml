@@ -1,0 +1,118 @@
+﻿@model LibraryDomain.Model.Shelf
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<LibraryDomain.Model.User> UserManager
+@{
+    string userId = null;
+    if (User.Identity.IsAuthenticated)
+    {
+        var user = await UserManager.GetUserAsync(User);
+        userId = user?.Id;
+    }
+}
+@{
+    ViewData["Title"] = "Деталі полички";
+}
+
+<h1 class="mb-4">@ViewData["Title"]</h1>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4 class="card-title text-primary">@Model.Name</h4>
+        <dl class="row">
+            <dt class="col-sm-3 fw-bold">Приватність</dt>
+            <dd class="col-sm-9">
+                <span class="badge @(Model.IsPrivate ? "bg-danger" : "bg-success")">
+                    @(Model.IsPrivate ? "Приватна" : "Публічна")
+                </span>
+            </dd>
+
+            <dt class="col-sm-3 fw-bold">Власник</dt>
+            <dd class="col-sm-9">@Model.User?.FirstName @Model.User?.LastName</dd>
+        </dl>
+
+        <div class="mt-3">
+            @if (userId == Model.UserId)
+            {
+                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning me-2">
+                    <i class="bi bi-pencil-square"></i> Редагувати поличку
+                </a>
+            }
+            <a asp-action="Index_User" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left-circle"></i> Назад до списку
+            </a>
+        </div>
+    </div>
+</div>
+
+<h3 class="mb-4">Книги у поличці</h3>
+
+@if (Model.ShelfBooks.Any())
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var shelfBook in Model.ShelfBooks)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">@shelfBook.Book.Title</h5>
+                        <p class="card-text mb-2">
+                            <strong>ISBN:</strong> @shelfBook.Book.Isbn<br />
+                            <strong>Видавництво:</strong> @shelfBook.Book.Publisher?.PublisherName<br />
+                        </p>
+
+                        <p class="card-text mb-2">
+                            <strong>Автори:</strong><br />
+                            @foreach (var author in shelfBook.Book.BookAuthors)
+                            {
+                                <span class="text-muted d-block">@author.Author.LastName @author.Author.FirstName</span>
+                            }
+                        </p>
+
+                        <p class="card-text mb-2">
+                            <strong>Жанри:</strong><br />
+                            @foreach (var genre in shelfBook.Book.BookGenres)
+                            {
+                                <span class="badge bg-secondary me-1">@genre.Genre.GenreName</span>
+                            }
+                        </p>
+
+                        <p class="card-text">
+                            <strong>Коментар:</strong><br />
+                            <small class="text-muted">@shelfBook.Comment</small>
+                        </p>
+                    </div>
+                    <div class="card-footer text-end">
+                        <a asp-controller="Books" asp-action="Details_User" asp-route-id="@shelfBook.Book.Id" class="btn btn-sm btn-outline-info me-1" title="Деталі">
+                            <i class="bi bi-info-circle"></i>
+                        </a>
+                        @if (userId == Model.UserId)
+                        {
+                            <form asp-controller="Shelves" asp-action="DeleteFromShelf" method="post" class="d-inline">
+                                <input type="hidden" name="shelfId" value="@Model.Id" />
+                                <input type="hidden" name="bookId" value="@shelfBook.Book.Id" />
+                                <button class="btn btn-sm btn-outline-danger" title="Видалити" onclick="return confirm('Ви впевнені, що хочете видалити книгу з полички?');">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p class="text-muted">Ця поличка ще не містить книг.</p>
+}
+
+@if (userId == Model.UserId)
+{
+    <div class="mt-4">
+        <h4>Додати книгу</h4>
+        <a asp-controller="Shelves" asp-action="AddBook" asp-route-shelfId="@Model?.Id" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Додати книгу
+        </a>
+    </div>
+}
+

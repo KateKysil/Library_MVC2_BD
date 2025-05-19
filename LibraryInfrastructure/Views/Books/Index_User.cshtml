@@ -1,0 +1,126 @@
+﻿@model IEnumerable<LibraryDomain.Model.Book>
+
+@{
+    ViewData["Title"] = "Книги за категорією";
+}
+
+<h1>Книги @ViewBag.Name</h1>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title text-primary">@item.Title</h4>
+
+                    <p class="card-text">
+                        <strong>ISBN:</strong> @item.Isbn<br />
+                        <strong>Publisher:</strong> @item.Publisher.PublisherName<br />
+                        <strong>Authors:</strong><br />
+                        @foreach (var author in item.BookAuthors)
+                        {
+                            <span class="text-muted">
+                                @author.Author.LastName
+                                @author.Author.FirstName
+                            </span>
+
+                            <br />
+                        }
+
+                        <strong>Genres:</strong><br />
+                        @foreach (var genre in item.BookGenres)
+                        {
+                            <span class="badge bg-secondary">@genre.Genre.GenreName</span>
+                        }
+                    </p>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Comment_User" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-1" title="Comment">
+                        <i class="bi bi-chat-left-text"></i>
+                    </a>
+                    <a asp-action="Details_User" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-1" title="Details_User">
+                        <i class="bi bi-info-circle"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="charts-container">
+    <div>
+        <h2>Book Statistics by Author</h2>
+        <canvas id="booksChart"></canvas>
+    </div>
+    <div>
+        <h2>Books by Publisher</h2>
+        <canvas id="booksByPublisherChart" width="400" height="200"></canvas>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("/api/Chart/countByAuthor")
+            .then(response => response.json())
+            .then(data => {
+                const authors = data.map(item => item.author);
+                const counts = data.map(item => item.count);
+
+                const ctx = document.getElementById('booksChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: authors,
+                        datasets: [{
+                            label: 'Number of Books',
+                            data: counts,
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error("Error loading chart data:", error));
+        fetch("/api/Chart/countByPublisher")
+            .then(response => response.json())
+            .then(data => {
+                const publishers = data.map(item => item.publisher);
+                const counts = data.map(item => item.count);
+
+                const ctx = document.getElementById('booksByPublisherChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: publishers,
+                        datasets: [{
+                            label: 'Number of Books by Publisher',
+                            data: counts,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error("Error loading publisher chart data:", error));
+    });
+</script>

@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using LibraryDomain.Model
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to the Library</h1>
+
+    @if (!SignInManager.IsSignedIn(User))
+    {
+        <p>You are not logged in.</p>
+        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Log in</a>
+        <a class="btn btn-secondary" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    }
+    else
+    {
+        <p>Hello, @User.Identity.Name!</p>
+        <a class="btn btn-danger" asp-area="Identity" asp-page="/Account/Logout">Log out</a>
+    }
+</div>

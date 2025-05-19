@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Ласкаво просимо";
+}
+
+<div class="d-flex flex-column justify-content-center align-items-center vh-100 text-center">
+
+    <div class="mb-5">
+        <h1 class="display-4 fw-bold">Привіт!</h1>
+        <p class="lead">Це програма для роботи з базою даних.</p>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row gap-3">
+        <a asp-action="Requests" asp-controller="Home" class="btn btn-primary btn-lg">Запити</a>
+        <a asp-action="Tables" asp-controller="Home" class="btn btn-success btn-lg">Таблиці</a>
+        <a asp-action="Help" asp-controller="Home" class="btn btn-info btn-lg text-white">Допомога</a>
+    </div>
+
+</div>

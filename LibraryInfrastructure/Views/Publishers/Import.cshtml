@@ -1,0 +1,20 @@
+﻿@model LibraryDomain.Model.Publisher
+
+@{
+    ViewData["Title"] = "Імпорт книг за видавництвами";
+}
+
+<h1>Імпорт</h1>
+<div>
+    <h3>Оберіть excel-файл для завантаження</h3>
+    @using (Html.BeginForm("Import", "Publishers", FormMethod.Post, new { enctype = "multipart/form-data", id = "frm-excel" }))
+    {
+        <div>
+            Завантажте Excel-файл:
+            <input type="file" name="fileExcel" id="fileExcel" />
+            <div>
+                <input type="submit" value="Завантажити" />
+            </div>
+        </div>
+    }
+</div>

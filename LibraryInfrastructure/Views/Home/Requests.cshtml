@@ -1,0 +1,140 @@
+﻿@model LibraryDomain.Model.RequestViewModel
+@{
+    ViewBag.Title = "Запити";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Left side: Vertical buttons -->
+        <div class="col-md-3 mb-3">
+            <div class="d-flex flex-column gap-2">
+                <a asp-controller="Home" asp-action="Requests" asp-route-id="1" class="btn btn-primary">Книги видавництва після року</a>
+                <a asp-controller="Home" asp-action="Requests" asp-route-id="2" class="btn btn-success">Автори певного жанру</a>
+                <a asp-controller="Home" asp-action="Requests" asp-route-id="3" class="btn btn-info">Книги авторів, які написали більше 1 книги</a>
+                <a asp-controller="Home" asp-action="Requests" asp-route-id="4" class="btn btn-warning">Книги жанру і видавництва</a>
+                <a asp-controller="Home" asp-action="Requests" asp-route-id="5" class="btn btn-danger">Автори з іменем</a>
+                <a asp-controller="Home" asp-action="Requests" asp-route-id="6" class="btn btn-secondary">Автори з таким самим набором книг, як у автора</a>
+                <a asp-controller="Home" asp-action="Requests" asp-route-id="7" class="btn btn-dark">Книги з такими ж жанрами</a>
+                <a asp-controller="Home" asp-action="Requests" asp-route-id="8" class="btn btn-outline-primary">Пари авторів з однаковими книгами</a>
+            </div>
+        </div>
+        
+        <!-- Right side: Header and table -->
+        <div class="col-md-9">
+            <h1 class="mb-4">@Model.RequestTitle</h1>
+            @{
+                int currentRequestId = Convert.ToInt32(ViewContext.RouteData.Values["id"]);
+            }
+            @if (currentRequestId == 1)
+            {
+                <form method="get" asp-controller="Home" asp-action="Requests">
+                    <input type="hidden" name="id" value="1" />
+                <div class="mb-2">
+                    <label for="publisherName">Назва видавництва:</label>
+                    <input type="text" id="publisherName" name="publisherName" class="form-control" value="@ViewData["PublisherName"]" />
+                </div>
+                <button type="submit" class="btn btn-primary">Пошук</button>
+            </form>
+            }
+            @if (currentRequestId == 2)
+            {
+                <form method="get" asp-controller="Home" asp-action="Requests">
+                    <input type="hidden" name="requestId" value="2" />
+                    <div class="mb-2">
+                        <label for="genreName">Назва жанру:</label>
+                        <input type="text" id="genreName" name="genreName" class="form-control" value="@ViewData["GenreName"]" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Пошук</button>
+                </form>
+            }
+            @if (currentRequestId == 3)
+            {
+                
+            }
+            @if (currentRequestId == 4)
+            {
+                <form method="get" asp-controller="Home" asp-action="Requests">
+                    <input type="hidden" name="id" value="4" />
+                    <div class="mb-2">
+                        <label for="publisherName">Назва видавництва:</label>
+                        <input type="text" id="publisherName" name="publisherName" class="form-control" value="@ViewData["PublisherName"]" />
+                    </div>
+                    <div class="mb-2">
+                        <label for="genreName">Назва жанру:</label>
+                        <input type="text" id="genreName" name="genreName" class="form-control" value="@ViewData["GenreName"]" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Пошук</button>
+                </form>
+            }
+            @if (currentRequestId == 5)
+            {
+                <form method="get" asp-controller="Home" asp-action="Requests">
+                    <input type="hidden" name="id" value="5" />
+                    <div class="mb-2">
+                        <label for="authorName">Ім'я або прізвище автора:</label>
+                        <input type="text" id="authorName" name="authorName" class="form-control" value="@ViewData["AuthorName"]" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Пошук</button>
+                </form>
+            }
+            @if (currentRequestId == 6)
+            {
+                <form method="get" asp-controller="Home" asp-action="Requests">
+                    <input type="hidden" name="id" value="6" />
+                    <div class="mb-2">
+                        <label for="authorId">Іd автора:</label>
+                        <input type="number" id="authorId" name="authorId" class="form-control" value="@ViewData["AuthorId"]" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Пошук</button>
+                </form>
+            }
+            @if (currentRequestId == 7)
+            {
+                <form method="get" asp-controller="Home" asp-action="Requests">
+                    <input type="hidden" name="id" value="7" />
+                    <div class="mb-2">
+                        <label for="bookId">Іd книги:</label>
+                        <input type="number" id="bookId" name="bookId" class="form-control" value="@ViewData["BookId"]" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Пошук</button>
+                </form>
+            }
+            @if (currentRequestId == 8)
+            {
+
+            }
+            @if (Model.Results?.Any() == true)
+            {
+                <table class="table table-bordered table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            @foreach (var header in Model.Headers)
+                            {
+                                <th>@header</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Results)
+                        {
+                            <tr>
+                                @foreach (var cell in row)
+                                {
+                                    <td>@cell</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else if (Model.Headers?.Any() == true)
+            {
+                <p class="text-danger">Результатів не знайдено для цього запиту.</p>
+            }
+            else
+            {
+                <p class="text-muted">Натисніть кнопку зліва, щоб побачити результат запиту.</p>
+            }
+        </div>
+    </div>
+</div>

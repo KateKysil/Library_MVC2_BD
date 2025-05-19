@@ -1,0 +1,56 @@
+﻿@model LibraryDomain.Model.Book
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Book</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Isbn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Isbn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Publisher)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Publisher.PublisherName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BookAuthors)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var author in Model.BookAuthors)
+            {
+                var fullName = author.Author.LastName + " " + author.Author.FirstName;
+                @fullName <br />
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BookGenres)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var genre in Model.BookGenres)
+            {
+                @genre.Genre.GenreName <br />
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-info">Edit</a> |
+    <a asp-action="Comments_Admin" asp-route-id="@Model?.Id" class="btn btn-info">Read Comments</a> |
+    <a asp-action="Index_Admin" class="btn btn-info">Back to List</a>
+</div>

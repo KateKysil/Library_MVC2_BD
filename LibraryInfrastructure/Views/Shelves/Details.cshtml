@@ -1,0 +1,89 @@
+﻿@model LibraryDomain.Model.Shelf
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Shelf</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsPrivate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IsPrivate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User.FirstName)
+        </dd>
+    </dl>
+</div>
+
+<h4>Books in this Shelf</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ShelfBooks.First().Book.Title)</th>
+            <th>@Html.DisplayNameFor(model => model.ShelfBooks.First().Book.Isbn)</th>
+            <th>@Html.DisplayNameFor(model => model.ShelfBooks.First().Book.Publisher)</th>
+            <th>@Html.DisplayNameFor(model => model.ShelfBooks.First().Book.BookAuthors)</th>
+            <th>@Html.DisplayNameFor(model => model.ShelfBooks.First().Book.BookGenres)</th>
+            <th>Comment</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var shelfBook in Model.ShelfBooks)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => shelfBook.Book.Title)</td>
+                <td>@Html.DisplayFor(modelItem => shelfBook.Book.Isbn)</td>
+                <td>@Html.DisplayFor(modelItem => shelfBook.Book.Publisher.PublisherName)</td>
+                <td>
+                    @foreach (var author in shelfBook.Book.BookAuthors)
+                    {
+                        var fullName = author.Author.LastName + " " + author.Author.FirstName;
+                        @fullName <br />
+                    }
+                </td>
+                <td>
+                    @foreach (var genre in shelfBook.Book.BookGenres)
+                    {
+                        @genre.Genre.GenreName <br />
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => shelfBook.Comment)</td>
+                <td>
+                    <a asp-controller="Books" asp-action="Edit" asp-route-id="@shelfBook.Book.Id">Edit</a> |
+                    <a asp-controller="Books" asp-action="Details" asp-route-id="@shelfBook.Book.Id">Details</a> |
+                    <a asp-controller="Books" asp-action="Delete" asp-route-id="@shelfBook.Book.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit Shelf</a>
+    <a asp-action="Index" class="btn btn-info">Back to List</a>
+</div>
+
+<hr />
+
+<div>
+    <h4>Add Book to Shelf</h4>
+    <a asp-controller="Shelves" asp-action="AddBook" asp-route-shelfId="@Model?.Id" class="btn btn-primary">Add Book</a>
+</div>

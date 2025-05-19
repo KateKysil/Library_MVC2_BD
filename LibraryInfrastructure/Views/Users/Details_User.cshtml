@@ -1,0 +1,77 @@
+﻿@model LibraryDomain.Model.User
+@{
+    ViewData["Title"] = "User Details (User)";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">@Model.UserName</h4>
+
+        <dl class="row">
+            <dt class="col-sm-2">ID</dt>
+            <dd class="col-sm-10">@Model.Id</dd>
+
+            <dt class="col-sm-2">First Name</dt>
+            <dd class="col-sm-10">@Model.FirstName</dd>
+
+            <dt class="col-sm-2">Last Name</dt>
+            <dd class="col-sm-10">@Model.LastName</dd>
+
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@Model.Email</dd>
+
+            <dt class="col-sm-2">Username</dt>
+            <dd class="col-sm-10">@Model.UserName</dd>
+
+            <dt class="col-sm-2">Birthday</dt>
+            <dd class="col-sm-10">@Model.Birthday.ToShortDateString()</dd>
+        </dl>
+
+        <form method="post" asp-area="Identity" asp-page="/Account/Logout" class="d-inline">
+            <button type="submit" class="btn btn-outline-danger">Logout</button>
+        </form>
+        <a asp-action="Edit_Admin" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit Account</a>
+    </div>
+</div>
+
+<h2>Мої полички</h2>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var item in Model.Shelves)
+    {
+        @if (Model.Id == item.User?.Id)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary">@item.Name</h4>
+
+                        <p class="card-text">
+                            <span class="badge @(item.IsPrivate ? "bg-danger" : "bg-success")">
+                                @(item.IsPrivate ? "Приватна" : "Публічна")
+                            </span>
+                        </p>
+
+                        <p class="card-text text-muted">
+                            Власник: @(item.User?.FirstName + " " + item.User?.LastName)
+                        </p>
+                    </div>
+
+                    <div class="card-footer text-center">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                            <i class="bi bi-pencil-square"></i> Редагувати
+                        </a>
+                        <a asp-action="Details_Admin" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-1" title="Details">
+                            <i class="bi bi-info-circle"></i> Деталі
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Delete">
+                            <i class="bi bi-trash"></i> Видалити
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

@@ -1,0 +1,36 @@
+﻿@model IEnumerable<LibraryDomain.Model.Author>
+
+@{
+    ViewData["Title"] = "Автори";
+}
+
+<h1>Автори</h1>
+<a asp-action="Create" class="btn btn-sm btn-outline-info me-1" title="Create">
+    Add New Author
+</a>
+<br />
+<br />
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="card-title text-primary">@item.FirstName @item.LastName</h3>
+                    <p class="card-text text-muted">@item.Country</p>
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                        <i class="bi bi-pencil-square"></i> Edit
+                    </a>
+                    <a asp-action="Details_Admin" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-1" title="Details">
+                        <i class="bi bi-info-circle"></i> Details
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Delete">
+                        <i class="bi bi-trash"></i> Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<LibraryDomain.Model.Genre>
+
+@{
+    ViewData["Title"] = "Жанри";
+}
+
+<h1>Жанри</h1>
+
+<a asp-action="Create" class="btn btn-sm btn-outline-info me-1" title="Create">
+    Add New Genre
+</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)  <!-- Added Id header -->
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GenreName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Id 
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GenreName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

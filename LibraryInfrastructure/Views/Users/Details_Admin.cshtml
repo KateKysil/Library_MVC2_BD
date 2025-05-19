@@ -1,0 +1,37 @@
+﻿@model LibraryDomain.Model.User
+@{
+    ViewData["Title"] = "User Details (Admin)";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">@Model.UserName</h4>
+
+        <dl class="row">
+            <dt class="col-sm-2">ID</dt>
+            <dd class="col-sm-10">@Model.Id</dd>
+
+            <dt class="col-sm-2">First Name</dt>
+            <dd class="col-sm-10">@Model.FirstName</dd>
+
+            <dt class="col-sm-2">Last Name</dt>
+            <dd class="col-sm-10">@Model.LastName</dd>
+
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@Model.Email</dd>
+
+            <dt class="col-sm-2">Username</dt>
+            <dd class="col-sm-10">@Model.UserName</dd>
+
+            <dt class="col-sm-2">Birthday</dt>
+            <dd class="col-sm-10">@Model.Birthday.ToShortDateString()</dd>
+        </dl>
+
+        <form method="post" asp-area="Identity" asp-page="/Account/Logout" class="d-inline" >
+            <button type="submit" class="btn btn-outline-danger">Logout</button>
+        </form>
+        <a asp-action="Edit_Admin" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit Account</a>
+    </div>
+</div>

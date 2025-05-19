@@ -1,0 +1,70 @@
+﻿@model IEnumerable<LibraryDomain.Model.Shelf>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<LibraryDomain.Model.User> UserManager
+@{
+    string userId = null;
+    if (User.Identity.IsAuthenticated)
+    {
+        var user = await UserManager.GetUserAsync(User);
+        userId = user?.Id;
+    }
+}
+@{
+    ViewData["Title"] = "Полички";
+}
+
+<h1>Полички</h1>
+
+<a asp-action="Create" class="btn btn-sm btn-outline-info me-1" title="Create">
+    Додати нову поличку
+</a>
+
+<br />
+<br />
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var item in Model)
+    {
+        @if (!item.IsPrivate || (item.IsPrivate && userId == item.User?.Id))
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-primary">@item.Name</h4>
+
+                        <p class="card-text">
+                            <span class="badge @(item.IsPrivate ? "bg-danger" : "bg-success")">
+                                @(item.IsPrivate ? "Приватна" : "Публічна")
+                            </span>
+                        </p>
+
+                        <p class="card-text text-muted">
+                            Власник: @(item.User?.FirstName + " " + item.User?.LastName)
+                        </p>
+                    </div>
+
+                    <div class="card-footer text-center">
+                        @if (userId == item.User?.Id)
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                                <i class="bi bi-pencil-square"></i> Редагувати
+                            </a>
+                        }
+                        <a asp-action="Details_User" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-1" title="Details">
+                            <i class="bi bi-info-circle"></i> Деталі
+                        </a>
+                        @if (userId == item.User?.Id)
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Delete">
+                                <i class="bi bi-trash"></i> Видалити
+                            </a>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    }
+</div>
